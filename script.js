@@ -1,70 +1,75 @@
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const playerSelection = button.textContent;
+        if (!['Rock', 'Paper', 'Scissors'].includes(playerSelection)) return;
+        playRound(playerSelection);
+    })
+});
+
+let playerScore = 0;
+let computerScore = 0;
+
 const computerPlay = () => {
     const randomNumber = Math.floor(Math.random() * 3);
     switch (randomNumber) {
         case 0:
-        return 'Rock';
+            return 'Rock';
         case 1:
-        return 'Paper';
+            return 'Paper';
         case 2:
-        return 'Scissors';
+            return 'Scissors';
     }
 }
 
-const playRound = (playerSelection, computerSelection) => {
-    console.log(`Your selection: ${playerSelection}`);
-    console.log(`Computer selection: ${computerSelection}`);
-    if (playerSelection === computerSelection.toLowerCase()) {
-        return 'It\'s a tie!';
+const playRound = (playerSelection) => {
+    const div = document.querySelector('.result');
+    const computerSelection = computerPlay();
+
+    const result = `<p>Your selection: ${playerSelection}</p><p>Computer selection: ${computerSelection}</p>`;
+
+    if (playerSelection === computerSelection) {
+        div.innerHTML = result + '<p>It\'s a tie!</p>';
     }
-    if (playerSelection === 'rock') {
+    else if (playerSelection === 'Rock') {
         if (computerSelection === 'Paper') {
-            return 'You lose! Paper beats Rock.';
-        } else {
-            return 'You win! Rock beats Scissors.';
-        }
-    }
-    else if (playerSelection === 'paper') {
-        if (computerSelection === 'Scissors') {
-            return 'You lose! Scissors beats Paper.';
-        } else {
-            return 'You win! Paper beats Rock.';
-        }
-    }
-    else if (playerSelection === 'scissors') {
-        if (computerSelection === 'Rock') {
-            return 'You lose! Rock beats Scissors.';
-        } else {
-            return 'You win! Scissors beats Paper.';
-        }
-    }
-}
-
-const game = () => {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt('Rock, Paper, or Scissors?').toLowerCase();
-        while (!['rock', 'paper', 'scissors'].includes(playerSelection)) {
-            playerSelection = prompt('Rock, Paper, or Scissors?').toLowerCase();
-        }
-        const computerSelection = computerPlay();
-        const result = playRound(playerSelection, computerSelection);
-        if (result.startsWith('You win')) {
-            playerScore++;
-        } else if (result.startsWith('You lose')) {
             computerScore++;
+            div.innerHTML = result + '<p>You lose! Paper beats Rock</p>';
+        } else {
+            playerScore++;
+            div.innerHTML = result + '<p>You win! Rock beats Scissors</p>';
         }
-        console.log(result);
     }
-    console.log(`Your score: ${playerScore}`);
-    console.log(`Computer score: ${computerScore}`);
-    if (playerScore > computerScore) {
-        return 'You win!';
+    else if (playerSelection === 'Paper') {
+        if (computerSelection === 'Scissors') {
+            computerScore++;
+            div.innerHTML = result + '<p>You lose! Scissors beats Paper</p>';
+        } else {
+            playerScore++;
+            div.innerHTML = result + '<p>You win! Paper beats Rock</p>';
+        }
     }
-    else if (playerScore < computerScore) {
-        return 'You lose!';
+    else if (playerSelection === 'Scissors') {
+        if (computerSelection === 'Rock') {
+            computerScore++;
+            div.innerHTML = result + '<p>You lose! Rock beats Scissors</p>';
+        } else {
+            playerScore++;
+            div.innerHTML = result + '<p>You win! Scissors beats Paper</p>';
+        }
     }
-    else if (playerScore === computerScore) {
-        return 'It\'s a tie!';
+
+    document.querySelector('.player-score').textContent = playerScore;
+    document.querySelector('.computer-score').textContent = computerScore;
+
+    if (playerScore === 5) {
+        div.innerHTML = div.innerHTML + '<p>You won the game!</p>';
+        playerScore = 0;
+        computerScore = 0;
+    }
+    else if (computerScore === 5) {
+        div.innerHTML = div.innerHTML + '<p>Computer won the game!</p>';
+        playerScore = 0;
+        computerScore = 0;
     }
 }
