@@ -1,14 +1,18 @@
-const buttons = document.querySelectorAll('button');
-buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        const playerSelection = button.textContent;
-        if (!['Rock', 'Paper', 'Scissors'].includes(playerSelection)) return;
-        playRound(playerSelection);
-    })
-});
+const main = () => {
+    const scores = {
+        playerScore: 0,
+        computerScore: 0
+    }
 
-let playerScore = 0;
-let computerScore = 0;
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const playerSelection = button.textContent;
+            if (!['Rock', 'Paper', 'Scissors'].includes(playerSelection)) return;
+            playRound(playerSelection, scores);
+        })
+    });
+}
 
 const computerPlay = () => {
     const randomNumber = Math.floor(Math.random() * 3);
@@ -22,7 +26,7 @@ const computerPlay = () => {
     }
 }
 
-const playRound = (playerSelection) => {
+const playRound = (playerSelection, scores) => {
     const div = document.querySelector('.result');
     const computerSelection = computerPlay();
 
@@ -33,43 +37,45 @@ const playRound = (playerSelection) => {
     }
     else if (playerSelection === 'Rock') {
         if (computerSelection === 'Paper') {
-            computerScore++;
+            scores.computerScore++;
             div.innerHTML = result + '<p>You lose! Paper beats Rock</p>';
         } else {
-            playerScore++;
+            scores.playerScore++;
             div.innerHTML = result + '<p>You win! Rock beats Scissors</p>';
         }
     }
     else if (playerSelection === 'Paper') {
         if (computerSelection === 'Scissors') {
-            computerScore++;
+            scores.computerScore++;
             div.innerHTML = result + '<p>You lose! Scissors beats Paper</p>';
         } else {
-            playerScore++;
+            scores.playerScore++;
             div.innerHTML = result + '<p>You win! Paper beats Rock</p>';
         }
     }
     else if (playerSelection === 'Scissors') {
         if (computerSelection === 'Rock') {
-            computerScore++;
+            scores.computerScore++;
             div.innerHTML = result + '<p>You lose! Rock beats Scissors</p>';
         } else {
-            playerScore++;
+            scores.playerScore++;
             div.innerHTML = result + '<p>You win! Scissors beats Paper</p>';
         }
     }
 
-    document.querySelector('.player-score').textContent = playerScore;
-    document.querySelector('.computer-score').textContent = computerScore;
+    document.querySelector('.player-score').textContent = scores.playerScore;
+    document.querySelector('.computer-score').textContent = scores.computerScore;
 
-    if (playerScore === 5) {
+    if (scores.playerScore === 5) {
         div.innerHTML = div.innerHTML + '<p>You won the game!</p>';
-        playerScore = 0;
-        computerScore = 0;
+        scores.playerScore = 0;
+        scores.computerScore = 0;
     }
-    else if (computerScore === 5) {
+    else if (scores.computerScore === 5) {
         div.innerHTML = div.innerHTML + '<p>Computer won the game!</p>';
-        playerScore = 0;
-        computerScore = 0;
+        scores.playerScore = 0;
+        scores.computerScore = 0;
     }
 }
+
+window.addEventListener("DOMContentLoaded", main);
